@@ -1,7 +1,7 @@
 from flask import Flask, send_file, g
 import time
 import os
-TEXMFDIST = "texmf-dist/"
+TEXMFDIST = "/app/texmf-dist/"
 startup_time = time.time()
 static_counter = {}
 file_db = {}

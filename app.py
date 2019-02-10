@@ -14,7 +14,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    htmlString = "<h1>Statistic Data. Server Up %d Seconds</h1>" % int(time.time() - startup_time)
+    htmlString = "<h1>Statistic Data. Server Up %d Seconds, Storing %d Items</h1>" % (int(time.time() - startup_time), len(file_db))
     for key in static_counter:
         htmlString += "<h3>%s (%d)<h3>"%(key, static_counter[key])
     return htmlString

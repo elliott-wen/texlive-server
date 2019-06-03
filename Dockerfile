@@ -7,9 +7,8 @@ RUN   apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -q -y wge
     python3 \
     python3-pip \
     git
-COPY pdflatex.fmt /app/
 RUN git clone https://github.com/SwiftLaTeX/texmf-server.git /app && \
     pip3 install -r /app/requirements.txt && echo "0.4"
-
+COPY pdflatex.fmt /app/
 WORKDIR /app
 CMD ["python3", "WSGI.py"]

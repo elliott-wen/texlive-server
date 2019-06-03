@@ -1,7 +1,7 @@
 from flask import Flask, send_file, g
 import time
-import os
 import subprocess
+from flask_cors import cross_origin
 startup_time = time.time()
 static_counter = {}
 cache_db = {}
@@ -21,6 +21,7 @@ def index():
 
 
 @app.route('/fetch/<filename>')
+@cross_origin()
 def fetch_file(filename):
 
     if filename == "pdflatex.fmt":

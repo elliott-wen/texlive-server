@@ -6,6 +6,3 @@ services:
         container_name: apt
         ports:
             - 80:5000
-        volumes:
-            - ~/texmf-dist:/app/texmf-dist
-

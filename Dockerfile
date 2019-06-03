@@ -1,9 +1,13 @@
 FROM ubuntu:18.04
-RUN apt-get update && apt-get install -y \
+RUN   apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -q -y wget texlive texlive-science texlive-publishers \
+    texlive-fonts-recommended \
+    texlive-generic-recommended \
+    texlive-latex-recommended \
+    texlive-plain-extra \
     python3 \
     python3-pip \
     git
-COPY texmf-dist /app/
+COPY pdflatex.fmt /app/
 RUN git clone https://github.com/SwiftLaTeX/texmf-server.git /app && \
     pip3 install -r /app/requirements.txt && echo "0.4"
 

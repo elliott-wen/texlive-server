@@ -1,20 +1,18 @@
 from flask import Flask, send_file, g
 import time
 import os
-TEXMFDIST = "/app/texmf-dist/"
+import subprocess
 startup_time = time.time()
 static_counter = {}
-file_db = {}
+cache_db = {}
 app = Flask(__name__)
-
-
 
 
 
 
 @app.route('/')
 def index():
-    htmlString = "<h1>Statistic Data. Server Up %d Seconds, Storing %d Items</h1>" % (int(time.time() - startup_time), len(file_db))
+    htmlString = "<h1>Statistic Data. Server Up %d Seconds.</h1>" % (int(time.time() - startup_time))
     for key in static_counter:
         htmlString += "<h3>%s (%d)<h3>"%(key, static_counter[key])
     return htmlString
@@ -25,32 +23,41 @@ def index():
 @app.route('/fetch/<filename>')
 def fetch_file(filename):
 
-    if filename in file_db:
+    if filename == "pdflatex.fmt":
+        return send_file(filename)
+
+    if filename not in cache_db:
+        search_file(filename)
+
+    if cache_db[filename] == "none":
+        return "File not found", 404
+    else:
         if filename not in static_counter:
             static_counter[filename] = 1
         else:
             static_counter[filename] += 1
-        urls = file_db[filename]
-        if(len(urls) > 1):
-            print ("Multiple options available! %s" % urls)
-        return send_file(os.path.join(TEXMFDIST, urls[0]))
-    return "File not found", 404
+        urls = cache_db[filename]
+        return send_file(urls)
 
 
-@app.before_first_request
-def build_file_db():
-    global file_db
-    global static_counter
-    static_counter = {}
-    total_count = 0
-    print("Start Building File Database")
-    for root, dirs, files in os.walk(TEXMFDIST):
-        for file in files:
-            if file not in file_db:
-                file_db[file] = []
-            wf = os.path.join(root, file)
-            file_db[file].append(wf[len(TEXMFDIST):])
-            total_count += 1
-    print("Database Built, Item %d Found" % (total_count))
+
+def search_file(name):
+
+    try:
+        cmd = ["kpsewhich", "-engine", "pdftex", name]
+        pro = subprocess.check_output(cmd, timeout=10)
+        if pro is None or pro == "":
+            print("No file %s due to exception" % name)
+            cache_db[name] = 'none'
+            return -1
+        addr = pro.decode("utf-8").split("\n")[0]
+        cache_db[name] = addr
+        print("Find file %s in %s" % (name, addr))
+        return 0
+
+    except:
+        print("Unable to search file %s due to exception" % name)
+        cache_db[name] = 'none'
+        return -1
 
 

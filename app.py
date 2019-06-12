@@ -47,17 +47,13 @@ def search_file(name):
     try:
         cmd = ["kpsewhich", "-engine", "pdftex", name]
         pro = subprocess.check_output(cmd, timeout=10)
-        if pro is None or pro == "":
-            print("No file %s due to exception" % name)
-            cache_db[name] = 'none'
-            return -1
         addr = pro.decode("utf-8").split("\n")[0]
         cache_db[name] = addr
         print("Find file %s in %s" % (name, addr))
         return 0
 
-    except:
-        print("Unable to search file %s due to exception" % name)
+    except CalledProcessError as error:
+        print("no such a file %s" % name)
         cache_db[name] = 'none'
         return -1
 

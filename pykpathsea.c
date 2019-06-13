@@ -46,8 +46,6 @@ boolean must_exist = false;
 
 
 /* The file type and path for lookups.  (-format, -path) */
-kpse_file_format_type user_format = kpse_last_format;
-string user_format_string;
 
 
 
@@ -166,10 +164,7 @@ find_format (kpathsea kpse, string name, boolean is_filename)
 {
   kpse_file_format_type ret = kpse_last_format;
 
-  if (is_filename && user_format != kpse_last_format) {
-    ret = user_format; /* just return what we already computed */
-
-  } else if (FILESTRCASEEQ (name, "config.ps")) {
+  if (FILESTRCASEEQ (name, "config.ps")) {
     ret = kpse_dvips_config_format;
   } else if (FILESTRCASEEQ (name, "fmtutil.cnf")) {
     ret = kpse_web2c_format;
@@ -218,9 +213,12 @@ find_format (kpathsea kpse, string name, boolean is_filename)
         }
         for (ext = kpse->format_info[f].suffix; !found && ext && *ext; ext++) {
           found = TRY_SUFFIX (*ext);
+          //printf("Trying1 %s %d\n", *ext, found);
         }
         for (ext=kpse->format_info[f].alt_suffix; !found && ext && *ext;ext++){
           found = TRY_SUFFIX (*ext);
+          //printf("Trying2 %s %d\n", *ext, found);
+
         }
 
         if (found)
@@ -258,6 +256,7 @@ lookup (kpathsea kpse, string name)
         {
           kpse_glyph_file_type glyph_ret;
           string temp = remove_suffix (name);
+
           /* Try to extract the resolution from the name.  */
           unsigned local_dpi = find_dpi (name);
           if (!local_dpi)
@@ -332,7 +331,11 @@ PyInit_pykpathsea(void)
 
   kpse = kpathsea_new();
 
-  kpathsea_set_program_name (kpse, "pdflatex", "pdflatex");
+  kpathsea_set_program_name (kpse, "pdftex", "pdftex");
+
+  kpathsea_xputenv (kpse, "engine", "pdftex");
+
+  kpathsea_init_prog (kpse, uppercasify (kpse->program_name), dpi, NULL, NULL);
 
   return module;
 }

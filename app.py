@@ -18,9 +18,9 @@ def update_stat(filename):
 
 @app.route('/')
 def index():
-    htmlString = "<h1>Statistic Data. Server Up %d Seconds.</h1>" % (int(time.time() - startup_time))
+    htmlString = "<iframe src='https://www.tug.org/texlive/' style='border:0;width: 100%; height: 95%'></iframe>"
     for key in static_counter:
-        htmlString += "<h3>%s (%d)<h3>"%(key, static_counter[key])
+        htmlString += "<div>%s (%d)</div>"%(key, static_counter[key])
     return htmlString
 
 

@@ -10,4 +10,4 @@ RUN git clone https://github.com/SwiftLaTeX/texmf-server.git /app && \
 COPY pdflatex.fmt /app/
 COPY fonts/* /app/fonts/
 WORKDIR /app
-CMD ["python3", "WSGI.py"]
+CMD ["python3", "wsgi.py"]

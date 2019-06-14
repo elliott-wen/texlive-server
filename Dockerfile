@@ -6,8 +6,6 @@ RUN   apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -q -y wge
     texlive-plain-extra \
     git
 RUN git clone https://github.com/SwiftLaTeX/texmf-server.git /app && \
-    pip3 install -r /app/requirements.txt && echo "0.5"
-COPY pdflatex.fmt /app/
-COPY fonts/* /app/fonts/
+    pip3 install -r /app/requirements.txt && echo "0.6"
 WORKDIR /app
 CMD ["python3", "wsgi.py"]

@@ -39,8 +39,8 @@ def fetch_font(filename):
 @app.route('/tex/<filename>')
 @cross_origin()
 def fetch_file(filename):
-    if filename == "pdflatex.fmt":
-        return send_file(filename)
+    if filename.endswith(".fmt"):
+        return send_from_directory("formats", filename)
 
     if filename not in cache_db:
         fast_search_file(filename)

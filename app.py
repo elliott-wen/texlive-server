@@ -1,4 +1,4 @@
-from flask import Flask, send_file, send_from_directory
+from flask import Flask, send_file, send_from_directory, request
 import time
 import os.path
 from flask_cors import cross_origin
@@ -62,5 +62,12 @@ def fast_search_file(name):
         cache_db[name] = res
         return 0
 
+# @cross_origin()
+# @app.route('/upload', methods=['POST'])
+# def upload():
+#     f = open("test.fmt", "wb")
+#     f.write(request.data)
+#     f.close()
+#     return "/"
 
 

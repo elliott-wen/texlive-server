@@ -4,23 +4,17 @@ import os.path
 from flask_cors import cross_origin
 import pykpathsea
 startup_time = time.time()
-static_counter = {}
 cache_db = {}
 app = Flask(__name__)
 
 
-def update_stat(filename):
-    if filename not in static_counter:
-        static_counter[filename] = 1
-    else:
-        static_counter[filename] += 1
 
 
 @app.route('/')
 def index():
     htmlString = "<iframe src='https://www.tug.org/texlive/' style='border:0;width: 100%; height: 95%'></iframe>"
-    for key in static_counter:
-        htmlString += "<div>%s (%d)</div>"%(key, static_counter[key])
+    for key in cache_db:
+        htmlString += "<div>%s</div>"%(key)
     return htmlString
 
 
@@ -29,8 +23,8 @@ def index():
 @app.route('/tex/<filename>')
 @cross_origin()
 def fetch_file(filename):
-    if filename.endswith(".fmt"):
-        return send_from_directory("formats", filename)
+    if len(cache_db) > 102400:
+        cache_db.clear()
 
     if filename not in cache_db:
         fast_search_file(filename)
@@ -38,7 +32,6 @@ def fetch_file(filename):
     if cache_db[filename] == "none":
         return "File not found", 404
     else:
-        update_stat(filename)
         urls = cache_db[filename]
         return send_file(urls)
 

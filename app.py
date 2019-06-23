@@ -3,10 +3,11 @@ import time
 import os.path
 from flask_cors import cross_origin
 import pykpathsea
+import re
 startup_time = time.time()
 cache_db = {}
 app = Flask(__name__)
-
+regex = re.compile(r'[^a-zA-Z0-9 _\-\.]')
 
 
 
@@ -26,6 +27,9 @@ def fetch_file(filename):
     if len(cache_db) > 102400:
         cache_db.clear()
 
+    if filename == "pdflatex.fmt": #Dont fetch it here, it is not compatiable
+        return "File not found", 404
+
     if filename not in cache_db:
         fast_search_file(filename)
 
@@ -35,9 +39,11 @@ def fetch_file(filename):
         urls = cache_db[filename]
         return send_file(urls)
 
+def san(name):
+    return regex.sub('', name)
 
 def fast_search_file(name):
-    res = pykpathsea.find_file(name)
+    res = pykpathsea.find_file(san(name))
     if res is None or not os.path.isfile(res):
         cache_db[name] = "none"
         return -1

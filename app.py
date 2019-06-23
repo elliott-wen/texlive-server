@@ -24,16 +24,6 @@ def index():
     return htmlString
 
 
-@app.route('/font/<filename>')
-@cross_origin()
-def fetch_font(filename):
-    if "/" in filename or ".." in filename:
-        return "File not found", 404
-    if os.path.isfile(os.path.join("fonts/", filename)):
-        update_stat(filename)
-        return send_from_directory("fonts", filename)
-    return "File not found", 404
-
 
 
 @app.route('/tex/<filename>')

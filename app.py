@@ -1,7 +1,6 @@
 from flask import Flask, send_file, send_from_directory, request
 import time
 import os.path
-from flask_cors import cross_origin
 import pykpathsea
 import re
 startup_time = time.time()
@@ -22,7 +21,6 @@ def index():
 
 
 @app.route('/tex/<filename>')
-@cross_origin()
 def fetch_file(filename):
     if len(cache_db) > 102400:
         cache_db.clear()

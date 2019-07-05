@@ -333,6 +333,10 @@ PyInit_pykpathsea(void)
 
   kpathsea_set_program_name (kpse, "pdftex", "pdftex");
 
+  kpathsea_set_program_enabled (kpse, kpse_pk_format, true, kpse_src_cmdline - 1);
+
+  kpathsea_set_program_enabled (kpse, kpse_tfm_format, true, kpse_src_cmdline - 1);
+
   kpathsea_xputenv (kpse, "engine", "pdftex");
 
   kpathsea_init_prog (kpse, uppercasify (kpse->program_name), dpi, NULL, NULL);

@@ -2,7 +2,7 @@ from flask import Flask, send_file
 import time
 import os.path
 import pykpathsea
-from flask_cors import cross_origin
+
 
 import re
 startup_time = time.time()
@@ -20,8 +20,6 @@ def index():
     return htmlString
 
 
-
-@cross_origin()
 @app.route('/tex/<filename>')
 def fetch_file(filename):
     if len(cache_db) > 102400:

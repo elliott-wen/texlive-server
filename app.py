@@ -5,6 +5,7 @@ import pykpathsea
 
 
 import re
+import os
 startup_time = time.time()
 cache_db = {}
 app = Flask(__name__)
@@ -25,14 +26,17 @@ def fetch_file(filename):
     if len(cache_db) > 102400:
         cache_db.clear()
 
-    if filename == "pdflatex.fmt": #Dont fetch it here, it is not compatiable
-        return "File not found", 404
+    if filename == "pdflatex.fmt" or filename == "pdflatexori.fmt": #Dont do kpathsea search
+        if os.path.exists(filename):
+            return send_file(filename)
+        else:
+            return "Format File not found", 301
 
     if filename not in cache_db:
         fast_search_file(filename)
 
     if cache_db[filename] == "none":
-        return "File not found", 404
+        return "File not found", 301
     else:
         urls = cache_db[filename]
         return send_file(urls)

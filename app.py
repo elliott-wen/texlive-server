@@ -26,7 +26,7 @@ def fetch_file(filename):
     if len(cache_db) > 102400:
         cache_db.clear()
 
-    if filename == "pdflatex.fmt" or filename == "pdflatexori.fmt": #Dont do kpathsea search
+    if filename == "xmllatex.fmt" or filename == "pdflatexori.fmt": #Dont do kpathsea search
         if os.path.exists(filename):
             return send_file(filename)
         else:
